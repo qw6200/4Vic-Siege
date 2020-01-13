@@ -1,4 +1,24 @@
 .ui.table {
   margin: auto;
-  width: 60%;
+  width: 70%;
+  font-size: 15px;
+}
+
+.ui.table td {
+  padding: 0 0.785714em;
+  padding-top: 5px;
+}
+
+.ui.image.label {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 18px;
+}
+
+i.large.icon, i.large.icons {
+  font-size: 15px;
+}
+
+.ui.label >.icon {
+  margin: 0 0.35em 0 0;
 }

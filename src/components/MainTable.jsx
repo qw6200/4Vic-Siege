@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react'
+import { Table, Label, Icon } from 'semantic-ui-react'
 import './MainTable.css';
 import _ from 'lodash'
 
@@ -35,14 +35,17 @@ class MainTable extends React.Component {
               [...this.state.data, {
                 id: data.ubisoft_id,
                 name: data.username,
-                current_mmr: data.seasons.shifting_tides.regions.ncsa[0].mmr,
                 ranked_kd: (data.seasons.shifting_tides.regions.ncsa[0].kills) / (data.seasons.shifting_tides.regions.ncsa[0].deaths),
                 ranked_wp: (data.seasons.shifting_tides.regions.ncsa[0].wins / (data.seasons.shifting_tides.regions.ncsa[0].wins + data.seasons.shifting_tides.regions.ncsa[0].losses)) * 100,
                 games_played: (data.seasons.shifting_tides.regions.ncsa[0].wins + data.seasons.shifting_tides.regions.ncsa[0].losses),
+                current_mmr: data.seasons.shifting_tides.regions.ncsa[0].mmr,
+                current_rank: data.seasons.shifting_tides.regions.ncsa[0].rank_text,
+                rank_svg: data.seasons.shifting_tides.regions.ncsa[0].rank_image,
               }]
           });
           if (this.state.data.length > 4) {
             this.sortData();
+            this.sanitizeData();
           }
         })
         .catch(console.log)
@@ -50,6 +53,30 @@ class MainTable extends React.Component {
   }
   componentDidMount() {
     this.getPlayerData();
+  }
+
+  sanitizeData() {
+    const { data } = this.state;
+    for (let i = 0; i <= 5; i++) {
+      let ranked_kd = data[i].ranked_kd;
+      let ranked_wp = data[i].ranked_wp;
+      let current_mmr = data[i].current_mmr;
+      if (isNaN(ranked_kd)) {
+        let newData = data.slice();
+        newData[i].ranked_kd = 'Unranked';
+        this.setState({ data: newData })
+      }
+      if (isNaN(ranked_wp)) {
+        let newData = data.slice();
+        newData[i].ranked_wp = 'Unranked';
+        this.setState({ data: newData })
+      }
+      if (current_mmr === 2500) {
+        let newData = data.slice();
+        newData[i].current_mmr = 'Unranked';
+        this.setState({ data: newData })
+      }
+    }
   }
 
   sortData() {
@@ -69,10 +96,16 @@ class MainTable extends React.Component {
     });
   }
 
+  displayUnranked(column, round, percentage) {
+    if (percentage && column !== 'Unranked') {
+      return column.toFixed(round) + '%';
+    } else {
+      return column === 'Unranked' ? 'Unranked' : column.toFixed(round);
+    }
+  }
+
   handleSort = (clickedColumn) => () => {
     const { column, data, direction } = this.state;
-    console.log('direction:', direction);
-    console.log(clickedColumn);
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
@@ -88,6 +121,51 @@ class MainTable extends React.Component {
     })
   }
 
+  renderTag(position) {
+    const { data } = this.state;
+    let iconName = '';
+    let title = '';
+    switch (position) {
+      case 0:
+        return (
+          <Label as='a' color='blue' image>
+            <Icon name='chess king' size='large' />
+            Leader Among Men
+        </Label>
+        )
+      case 1:
+        return (
+          <Label as='a' color='teal' image>
+            <Icon name='star' size='large' />
+            Distinguished Player
+        </Label>
+        )
+      case 2:
+        return (
+          <Label as='a' color='green' image>
+            <Icon name='star half outline' size='large' />
+            Respectable Soldier
+        </Label>
+        )
+      case 3:
+        return (
+          <Label as='a' color='orange' image>
+            <Icon name='handicap' size='large' />
+            Handicapped Player
+        </Label>
+        )
+      case 4:
+        return (
+          <Label as='a' color='red' image>
+            <Icon name='blind' size='large' />
+            Jotbap Sekki
+        </Label>
+        )
+      default:
+        return null;
+    }
+  }
+
   render() {
     const { data, column, direction } = this.state;
     return (
@@ -96,7 +174,7 @@ class MainTable extends React.Component {
           <Table.Row>
             <Table.HeaderCell>IGN</Table.HeaderCell>
             <Table.HeaderCell>Ranked KD</Table.HeaderCell>
-            <Table.HeaderCell>Ranked W/L%</Table.HeaderCell>
+            <Table.HeaderCell>Ranked W/L</Table.HeaderCell>
             <Table.HeaderCell>Games Played</Table.HeaderCell>
             <Table.HeaderCell
               sorted={column === 'current_mmr' ? direction : null}
@@ -104,16 +182,30 @@ class MainTable extends React.Component {
             >
               Current MMR
             </Table.HeaderCell>
+            <Table.HeaderCell>Current Rank</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {data.map((player) => (
+          {data.map((player, index) => (
             <Table.Row key={player.id}>
-              <Table.Cell>{player.name}</Table.Cell>
-              <Table.Cell>{player.ranked_kd.toFixed(2)}</Table.Cell>
-              <Table.Cell>{player.ranked_wp.toFixed(0)}%</Table.Cell>
+              <Table.Cell>
+                {player.name}
+                {this.renderTag(index)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.displayUnranked(player.ranked_kd, 2)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.displayUnranked(player.ranked_wp, 0, true)}
+              </Table.Cell>
               <Table.Cell>{player.games_played}</Table.Cell>
-              <Table.Cell>{player.current_mmr}</Table.Cell>
+              <Table.Cell>{this.displayUnranked(player.current_mmr)}</Table.Cell>
+              <Table.Cell className='current-rank' textAlign='center'>
+                <div>
+                  <div className="current-rank-text">{player.current_rank}</div>
+                  <img width="30%" src={player.rank_svg} alt="rank" />
+                </div>
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
