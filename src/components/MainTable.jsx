@@ -8,53 +8,83 @@ class MainTable extends React.Component {
     super(props);
     this.state = {
       endpoints: [
-        'https://r6tab.com/api/player.php?p_id=073b088d-7260-4874-baa5-2daf7bdcf28c',
-        'https://r6tab.com/api/player.php?p_id=9b89338d-2235-4ecb-8ac6-b761516f0c32',
-        'https://r6tab.com/api/player.php?p_id=09fa8f09-4975-4536-ad73-7d29c1c0dcd7',
-        'https://r6tab.com/api/player.php?p_id=0a1ebb44-02a2-4d69-8d1f-e3d97639636a',
-        'https://r6tab.com/api/player.php?p_id=7ce8459b-70c0-4df3-8011-8ebbf2b260e7',
+        'https://api2.r6stats.com/public-api/stats/CubeheadCC/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/dannykimbaby/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/ALSJAE/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/JacobsLeftNut/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/Sangxue/pc/seasonal',
       ],
       data: [],
       column: null,
-      direction: null,
+      direction: 'descending',
     }
   }
-  
-  componentDidMount() {
+
+  getPlayerData() {
     for (let i = 0; i <= 5; i++) {
-      fetch(this.state.endpoints[i])
+      fetch(this.state.endpoints[i], {
+        headers: new Headers({
+          // eslint-disable-next-line no-useless-concat
+          'Authorization': 'Bearer ' + 'f889606e-8bc5-4f1c-b941-084aefd16a90',
+        })
+      })
         .then(res => res.json())
         .then((data) => {
           this.setState({
             data:
               [...this.state.data, {
-                id: data.p_id,
-                name: data.p_name,
-                ranked_kd: (data.ranked.NA_kills/data.ranked.NA_deaths),
-                current_mmr: data.p_NA_currentmmr,
-                ranked_wp: (data.ranked.NA_wins/(data.ranked.NA_wins + data.ranked.NA_losses)) * 100
+                id: data.ubisoft_id,
+                name: data.username,
+                current_mmr: data.seasons.shifting_tides.regions.ncsa[0].mmr,
+                ranked_kd: (data.seasons.shifting_tides.regions.ncsa[0].kills) / (data.seasons.shifting_tides.regions.ncsa[0].deaths),
+                ranked_wp: (data.seasons.shifting_tides.regions.ncsa[0].wins / (data.seasons.shifting_tides.regions.ncsa[0].wins + data.seasons.shifting_tides.regions.ncsa[0].losses)) * 100,
+                games_played: (data.seasons.shifting_tides.regions.ncsa[0].wins + data.seasons.shifting_tides.regions.ncsa[0].losses),
               }]
           });
+          if (this.state.data.length > 4) {
+            this.sortData();
+          }
         })
         .catch(console.log)
     }
   }
-  handleSort = (clickedColumn) => () => {
-    console.log('clicked');
-    const { column, data, direction } = this.state
+  componentDidMount() {
+    this.getPlayerData();
+  }
 
+  sortData() {
+    const { data } = this.state;
+    this.setState({
+      column: 'current_mmr',
+      data: _.sortBy(data, ['current_mmr']),
+      direction: 'descending',
+    });
+    this.reverseData();
+  }
+
+  reverseData() {
+    const { data } = this.state;
+    this.setState({
+      data: data.reverse()
+    });
+  }
+
+  handleSort = (clickedColumn) => () => {
+    const { column, data, direction } = this.state;
+    console.log('direction:', direction);
+    console.log(clickedColumn);
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
         data: _.sortBy(data, [clickedColumn]),
-        direction: 'ascending',
+        direction: 'descending',
       })
       return
     }
 
     this.setState({
       data: data.reverse(),
-      direction: direction === 'ascending' ? 'descending' : 'ascending',
+      direction: direction === 'descending' ? 'ascending' : 'descending',
     })
   }
 
@@ -67,6 +97,7 @@ class MainTable extends React.Component {
             <Table.HeaderCell>IGN</Table.HeaderCell>
             <Table.HeaderCell>Ranked KD</Table.HeaderCell>
             <Table.HeaderCell>Ranked W/L%</Table.HeaderCell>
+            <Table.HeaderCell>Games Played</Table.HeaderCell>
             <Table.HeaderCell
               sorted={column === 'current_mmr' ? direction : null}
               onClick={this.handleSort('current_mmr')}
@@ -77,12 +108,13 @@ class MainTable extends React.Component {
         </Table.Header>
         <Table.Body>
           {data.map((player) => (
-              <Table.Row key={player.id}>
-                <Table.Cell>{player.name}</Table.Cell>
-                <Table.Cell>{player.ranked_kd.toFixed(2)}</Table.Cell>
-                <Table.Cell>{player.ranked_wp.toFixed(0)}%</Table.Cell>
-                <Table.Cell>{player.current_mmr}</Table.Cell>
-              </Table.Row>
+            <Table.Row key={player.id}>
+              <Table.Cell>{player.name}</Table.Cell>
+              <Table.Cell>{player.ranked_kd.toFixed(2)}</Table.Cell>
+              <Table.Cell>{player.ranked_wp.toFixed(0)}%</Table.Cell>
+              <Table.Cell>{player.games_played}</Table.Cell>
+              <Table.Cell>{player.current_mmr}</Table.Cell>
+            </Table.Row>
           ))}
         </Table.Body>
       </Table>
