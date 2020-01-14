@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Label, Icon } from 'semantic-ui-react'
+import { Table, Label, Icon, Header, Image } from 'semantic-ui-react'
 import './MainTable.css';
 import _ from 'lodash'
 
@@ -96,7 +96,7 @@ class MainTable extends React.Component {
     });
   }
 
-  displayUnranked(column, round, percentage) {
+  displayRank(column, round, percentage) {
     if (percentage && column !== 'Unranked') {
       return column.toFixed(round) + '%';
     } else {
@@ -122,28 +122,25 @@ class MainTable extends React.Component {
   }
 
   renderTag(position) {
-    const { data } = this.state;
-    let iconName = '';
-    let title = '';
     switch (position) {
       case 0:
         return (
           <Label as='a' color='blue' image>
             <Icon name='chess king' size='large' />
-            Leader Among Men
+            King of the North
         </Label>
         )
       case 1:
         return (
           <Label as='a' color='teal' image>
-            <Icon name='star' size='large' />
-            Distinguished Player
+            <Icon name='trophy' size='large' />
+            Renowned Player
         </Label>
         )
       case 2:
         return (
           <Label as='a' color='green' image>
-            <Icon name='star half outline' size='large' />
+            <Icon name='star' size='large' />
             Respectable Soldier
         </Label>
         )
@@ -158,21 +155,38 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='red' image>
             <Icon name='blind' size='large' />
-            Jotbap Sekki
+            Jot-Bap Sekki
         </Label>
         )
       default:
         return null;
     }
   }
-
+  
+  renderName(ign) {
+    switch (ign) {
+      case 'CubeheadCC':
+        return 'Jacob Lee';
+      case 'dannykimbaby':
+        return 'Daniel Kim';
+      case 'ALSJAE':
+        return 'Minjae Cho';
+      case 'Sangxue':
+        return 'Shane Cho';
+      case 'JacobsLeftNut':
+        return 'Chris Choi';
+      default:
+        return 'Unknown Player';
+    }
+  }
   render() {
     const { data, column, direction } = this.state;
     return (
-      <Table celled sortable fixed>
+      <Table celled sortable fixed basic='very' selectable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>IGN</Table.HeaderCell>
+            <Table.HeaderCell>Player</Table.HeaderCell>
             <Table.HeaderCell>Ranked KD</Table.HeaderCell>
             <Table.HeaderCell>Ranked W/L</Table.HeaderCell>
             <Table.HeaderCell>Games Played</Table.HeaderCell>
@@ -182,30 +196,32 @@ class MainTable extends React.Component {
             >
               Current MMR
             </Table.HeaderCell>
-            <Table.HeaderCell>Current Rank</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {data.map((player, index) => (
             <Table.Row key={player.id}>
               <Table.Cell>
-                {player.name}
+                <Header as='h3' image>
+                  <Image src={player.rank_svg} rounded size='tiny' />
+                  <Header.Content>
+                    {player.name}
+                    <Header.Subheader>{player.current_rank}</Header.Subheader>
+                  </Header.Content>
+                </Header>
+              </Table.Cell>
+              <Table.Cell>
+                {this.renderName(player.name)}
                 {this.renderTag(index)}
               </Table.Cell>
               <Table.Cell>
-                {this.displayUnranked(player.ranked_kd, 2)}
+                {this.displayRank(player.ranked_kd, 2)}
               </Table.Cell>
               <Table.Cell>
-                {this.displayUnranked(player.ranked_wp, 0, true)}
+                {this.displayRank(player.ranked_wp, 0, true)}
               </Table.Cell>
               <Table.Cell>{player.games_played}</Table.Cell>
-              <Table.Cell>{this.displayUnranked(player.current_mmr)}</Table.Cell>
-              <Table.Cell className='current-rank' textAlign='center'>
-                <div>
-                  <div className="current-rank-text">{player.current_rank}</div>
-                  <img width="30%" src={player.rank_svg} alt="rank" />
-                </div>
-              </Table.Cell>
+              <Table.Cell>{this.displayRank(player.current_mmr)}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

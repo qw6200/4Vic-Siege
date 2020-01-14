@@ -1,16 +1,17 @@
 .ui.table {
   margin: auto;
   width: 70%;
-  font-size: 15px;
+  font-family: 'Belleza', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .ui.table td {
-  padding: 0 0.785714em;
-  padding-top: 5px;
+  padding: 8px 0.785714em;
 }
 
 .ui.image.label {
-  margin-top: 5px;
+  margin-top: 7px;
   margin-bottom: 5px;
   line-height: 18px;
 }
@@ -21,4 +22,8 @@ i.large.icon, i.large.icons {
 
 .ui.label >.icon {
   margin: 0 0.35em 0 0;
+}
+
+.ui.celled.table tr:nth-child(even){
+  background-color: #f2f9fa;
 }
