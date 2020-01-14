@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/4Vic-Siege/static/css/main.447a6e18.chunk.css",
+    "main.js": "/4Vic-Siege/static/js/main.e153d43e.chunk.js",
+    "main.js.map": "/4Vic-Siege/static/js/main.e153d43e.chunk.js.map",
+    "runtime-main.js": "/4Vic-Siege/static/js/runtime-main.7c0a4851.js",
+    "runtime-main.js.map": "/4Vic-Siege/static/js/runtime-main.7c0a4851.js.map",
+    "static/js/2.324ca0ad.chunk.js": "/4Vic-Siege/static/js/2.324ca0ad.chunk.js",
+    "static/js/2.324ca0ad.chunk.js.map": "/4Vic-Siege/static/js/2.324ca0ad.chunk.js.map",
+    "index.html": "/4Vic-Siege/index.html",
+    "precache-manifest.405fb0653f975af7fd89be24c07b5d10.js": "/4Vic-Siege/precache-manifest.405fb0653f975af7fd89be24c07b5d10.js",
+    "service-worker.js": "/4Vic-Siege/service-worker.js",
+    "static/css/main.447a6e18.chunk.css.map": "/4Vic-Siege/static/css/main.447a6e18.chunk.css.map",
+    "static/js/2.324ca0ad.chunk.js.LICENSE": "/4Vic-Siege/static/js/2.324ca0ad.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7c0a4851.js",
+    "static/js/2.324ca0ad.chunk.js",
+    "static/css/main.447a6e18.chunk.css",
+    "static/js/main.e153d43e.chunk.js"
+  ]
+}
