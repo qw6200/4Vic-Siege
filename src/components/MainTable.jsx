@@ -11,7 +11,7 @@ class MainTable extends React.Component {
         'https://api2.r6stats.com/public-api/stats/CubeheadCC/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/Circadia.4Vic/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/ALSJAE/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/JacobsLeftNut/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/CeeCee.4Vic/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/SO.4Vic/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/TrendSetto.4Vic/pc/seasonal',
       ],
