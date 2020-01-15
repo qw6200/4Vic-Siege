@@ -9,10 +9,11 @@ class MainTable extends React.Component {
     this.state = {
       endpoints: [
         'https://api2.r6stats.com/public-api/stats/CubeheadCC/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/dannykimbaby/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/Circadia.4Vic/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/ALSJAE/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/JacobsLeftNut/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/Sangxue/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/SO.4Vic/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/TrendSetto.4Vic/pc/seasonal',
       ],
       data: [],
       column: null,
