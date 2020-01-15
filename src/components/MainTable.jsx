@@ -183,6 +183,8 @@ class MainTable extends React.Component {
         return 'Shane Cho';
       case 'CeeCee.4Vic':
         return 'Chris Choi';
+      case 'TrendSetto.4Vic':
+        return 'Paul Han';
       default:
         return 'Unknown Player';
     }
