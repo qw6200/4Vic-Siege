@@ -135,7 +135,7 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='teal' image>
             <Icon name='trophy' size='large' />
-            Renowned Player
+            Wannabe First
         </Label>
         )
       case 2:
