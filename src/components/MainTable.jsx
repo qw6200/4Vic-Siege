@@ -1,19 +1,22 @@
 import React from 'react';
-import { Table, Label, Icon, Header, Image } from 'semantic-ui-react'
+import { Table, Label, Icon, Header, Image, Statistic, Popup } from 'semantic-ui-react'
 import './MainTable.css';
 import _ from 'lodash'
+
+let names = ['CubeheadCC', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'JjinSSu'];
 
 class MainTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       endpoints: [
-        'https://api2.r6stats.com/public-api/stats/CubeheadCC/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/Circadia.4Vic/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/ALSJAE/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/CeeCee.4Vic/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/SO.4Vic/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/TrendSetto.4Vic/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[0] + '/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[1] + '/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[2] + '/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[3] + '/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[4] + '/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[5] + '/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
       ],
       data: [],
       column: null,
@@ -22,7 +25,8 @@ class MainTable extends React.Component {
   }
 
   getPlayerData() {
-    for (let i = 0; i <= 5; i++) {
+    const { endpoints } = this.state;
+    for (let i = 0; i <= endpoints.length; i++) {
       fetch(this.state.endpoints[i], {
         headers: new Headers({
           // eslint-disable-next-line no-useless-concat
@@ -31,20 +35,39 @@ class MainTable extends React.Component {
       })
         .then(res => res.json())
         .then((data) => {
-          this.setState({
-            data:
-              [...this.state.data, {
-                id: data.ubisoft_id,
-                name: data.username,
-                ranked_kd: (data.seasons.shifting_tides.regions.ncsa[0].kills) / (data.seasons.shifting_tides.regions.ncsa[0].deaths),
-                ranked_wp: (data.seasons.shifting_tides.regions.ncsa[0].wins / (data.seasons.shifting_tides.regions.ncsa[0].wins + data.seasons.shifting_tides.regions.ncsa[0].losses)) * 100,
-                games_played: (data.seasons.shifting_tides.regions.ncsa[0].wins + data.seasons.shifting_tides.regions.ncsa[0].losses),
-                current_mmr: data.seasons.shifting_tides.regions.ncsa[0].mmr,
-                current_rank: data.seasons.shifting_tides.regions.ncsa[0].rank_text,
-                rank_svg: data.seasons.shifting_tides.regions.ncsa[0].rank_image,
-              }]
-          });
-          if (this.state.data.length > 5) {
+          let season = data.seasons.shifting_tides.regions.ncsa[0];
+          let lastSession = data.seasons.shifting_tides.regions.ncsa[1];
+          if (season.mmr === 2500) {
+            this.setState({
+              data:
+                [...this.state.data, {
+                  id: data.ubisoft_id,
+                  name: data.username,
+                  ranked_kd: (season.kills) / (season.deaths),
+                  ranked_wp: (season.wins / (season.wins + season.losses)) * 100,
+                  games_played: (season.wins + season.losses),
+                  current_mmr: 0,
+                  current_rank: season.rank_text,
+                  rank_svg: season.rank_image,
+                }]
+            });
+          } else {
+            this.setState({
+              data:
+                [...this.state.data, {
+                  id: data.ubisoft_id,
+                  name: data.username,
+                  ranked_kd: (season.kills) / (season.deaths),
+                  ranked_wp: (season.wins / (season.wins + season.losses)) * 100,
+                  games_played: (season.wins + season.losses),
+                  current_mmr: season.mmr,
+                  current_rank: season.rank_text,
+                  rank_svg: season.rank_image,
+                  last_mmr: lastSession.mmr,
+                }]
+            });
+          }
+          if (this.state.data.length === endpoints.length) {
             this.sortData();
             this.sanitizeData();
           }
@@ -57,8 +80,8 @@ class MainTable extends React.Component {
   }
 
   sanitizeData() {
-    const { data } = this.state;
-    for (let i = 0; i <= 5; i++) {
+    const { data, endpoints } = this.state;
+    for (let i = 0; i <= endpoints.length; i++) {
       let ranked_kd = data[i].ranked_kd;
       let ranked_wp = data[i].ranked_wp;
       let current_mmr = data[i].current_mmr;
@@ -72,7 +95,7 @@ class MainTable extends React.Component {
         newData[i].ranked_wp = 'Unranked';
         this.setState({ data: newData })
       }
-      if (current_mmr === 2500) {
+      if (current_mmr === 0 || isNaN(current_mmr)) {
         let newData = data.slice();
         newData[i].current_mmr = 'Unranked';
         this.setState({ data: newData })
@@ -122,6 +145,25 @@ class MainTable extends React.Component {
     })
   }
 
+  mmrDifference(current_mmr, last_mmr) {
+    if (isNaN(current_mmr)) {
+      return 'Unranked';
+    }
+    let diff = current_mmr - last_mmr;
+    if (diff < 0) {
+      return (
+        <Statistic color='red'>
+          <Statistic.Value>{diff}</Statistic.Value>
+        </Statistic>
+      )
+    } else {
+      return (
+        <Statistic color='green'>
+          <Statistic.Value>{diff}</Statistic.Value>
+        </Statistic>
+      )
+    }
+  }
   renderTag(position) {
     switch (position) {
       case 0:
@@ -149,7 +191,7 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='orange' image>
             <Icon name='low vision' size='large' />
-            Very Average Member
+            Very Average Player
         </Label>
         )
       case 4:
@@ -160,6 +202,13 @@ class MainTable extends React.Component {
         </Label>
         )
       case 5:
+        return (
+          <Label as='a' color='brown' image>
+            <Icon name='trash alternate' size='large' />
+            Straight Up Trash
+        </Label>
+        )
+      case 6:
         return (
           <Label as='a' color='red' image>
             <Icon name='blind' size='large' />
@@ -173,18 +222,20 @@ class MainTable extends React.Component {
 
   renderName(ign) {
     switch (ign) {
-      case 'CubeheadCC':
+      case names[0]:
         return 'Jacob Lee';
-      case 'Circadia.4Vic':
+      case names[1]:
         return 'Daniel Kim';
-      case 'ALSJAE':
+      case names[2]:
         return 'Minjae Cho';
-      case 'SO.4Vic':
-        return 'Shane Cho';
-      case 'CeeCee.4Vic':
+      case names[3]:
         return 'Chris Choi';
-      case 'TrendSetto.4Vic':
+      case names[4]:
+        return 'Shane Cho';
+      case names[5]:
         return 'Paul Han';
+      case names[6]:
+        return 'Jinsu Yu ';
       default:
         return 'Unknown Player';
     }
@@ -205,6 +256,14 @@ class MainTable extends React.Component {
               onClick={this.handleSort('current_mmr')}
             >
               Current MMR
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              MMR Change
+              <Popup
+                trigger={<Icon size='tiny' circular name='question' />}
+                content='This change is based on your MMR in the last 20-25 hours.'
+                size='small'
+              />
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -232,6 +291,7 @@ class MainTable extends React.Component {
               </Table.Cell>
               <Table.Cell>{player.games_played}</Table.Cell>
               <Table.Cell>{this.displayRank(player.current_mmr)}</Table.Cell>
+              <Table.Cell>{this.mmrDifference(player.current_mmr, player.last_mmr)}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

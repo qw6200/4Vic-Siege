@@ -1,6 +1,6 @@
 .ui.table {
   margin: auto;
-  width: 70%;
+  width: 85%;
   font-family: 'Belleza', sans-serif;
   font-size: 20px;
   font-weight: 500;
@@ -11,13 +11,17 @@
 }
 
 .ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child {
-  width: 20% !important; 
+  width: 17% !important; 
+}
+.ui.sortable.table thead th {
+  font-size: 18px;
 }
 
 .ui.image.label {
   margin-top: 7px;
   margin-bottom: 5px;
   line-height: 18px;
+  font-size: 14px;
 }
 
 i.large.icon, i.large.icons {
@@ -30,4 +34,12 @@ i.large.icon, i.large.icons {
 
 .ui.celled.table tr:nth-child(even){
   background-color: #f2f9fa;
+}
+
+.ui.statistic>.value, .ui.statistics .statistic>.value {
+  font-size: 18px !important;
+}
+
+i.circular.icon {
+  margin-left: 6.5px;
 }
