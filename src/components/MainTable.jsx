@@ -148,14 +148,14 @@ class MainTable extends React.Component {
       case 3:
         return (
           <Label as='a' color='orange' image>
-            <Icon name='handicap' size='large' />
+            <Icon name='low vision' size='large' />
             Very Average Member
         </Label>
         )
       case 4:
         return (
           <Label as='a' color='yellow' image>
-            <Icon name='low vision' size='large' />
+            <Icon name='handicap' size='large' />
             Handicapped Player
         </Label>
         )
