@@ -44,7 +44,7 @@ class MainTable extends React.Component {
                 rank_svg: data.seasons.shifting_tides.regions.ncsa[0].rank_image,
               }]
           });
-          if (this.state.data.length > 4) {
+          if (this.state.data.length > 5) {
             this.sortData();
             this.sanitizeData();
           }
@@ -154,27 +154,34 @@ class MainTable extends React.Component {
         )
       case 4:
         return (
+          <Label as='a' color='yellow' image>
+            <Icon name='blind' size='large' />
+            Jot-Bap
+        </Label>
+        )
+      case 5:
+        return (
           <Label as='a' color='red' image>
             <Icon name='blind' size='large' />
             Jot-Bap Sekki
-        </Label>
+          </Label>
         )
       default:
         return null;
     }
   }
-  
+
   renderName(ign) {
     switch (ign) {
       case 'CubeheadCC':
         return 'Jacob Lee';
-      case 'dannykimbaby':
+      case 'Circadia.4Vic':
         return 'Daniel Kim';
       case 'ALSJAE':
         return 'Minjae Cho';
-      case 'Sangxue':
+      case 'SO.4Vic':
         return 'Shane Cho';
-      case 'JacobsLeftNut':
+      case 'Cee':
         return 'Chris Choi';
       default:
         return 'Unknown Player';

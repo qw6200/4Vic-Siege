@@ -10,6 +10,10 @@
   padding: 8px 0.785714em;
 }
 
+.ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child {
+  width: 20% !important; 
+}
+
 .ui.image.label {
   margin-top: 7px;
   margin-bottom: 5px;
