@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable array-callback-return */
 import React from 'react'
 import { Message, Table, Header, Image } from 'semantic-ui-react'
@@ -24,6 +25,8 @@ class MMRCalculator extends React.Component {
       indexComboList: [],
       team1: [],
       team2: [],
+      team1Players: [],
+      team2Players: [],
     }
   }
 
@@ -43,9 +46,6 @@ class MMRCalculator extends React.Component {
         .then(res => res.json())
         .then((data) => {
           let season = data.seasons.shifting_tides.regions.ncsa[0];
-          if (data.seasons.shifting_tides.regions.ncsa[0] === undefined) {
-            console.log('undefined');
-          }
           this.setState({
             data:
               [...this.state.data, {
@@ -130,13 +130,44 @@ class MMRCalculator extends React.Component {
   }
 
   matchTeams() {
-    const { team1, team2 } = this.state;
-    console.log('Team 1:', team1);
-    console.log('Team 2:', team2);
+    const { team1Players, team2Players, team1, team2, data } = this.state;
+    let flag = 0;
+    let flag2 = 0;
+    for (let i = 0; i < team1.length; i++) {
+      data.map((player) => {
+        if (team1[i] === player.current_mmr) {
+          this.setState({
+            team1Players:
+              [...this.state.team1Players, {
+                name: player.name,
+                current_mmr: player.current_mmr,
+                rank_svg: player.rank_svg,
+                current_rank: player.current_rank,
+              }]
+          });
+        }
+      });
+    }
+
+    for (let i = 0; i < team2.length; i++) {
+      data.map((player) => {
+        if (team2[i] === player.current_mmr) {
+          this.setState({
+            team2Players:
+              [...this.state.team2Players, {
+                name: player.name,
+                current_mmr: player.current_mmr,
+                rank_svg: player.rank_svg,
+                current_rank: player.current_rank,
+              }]
+          });
+        }
+      });
+    }
   }
 
   render() {
-    const { data } = this.state;
+    const { data, team1Players, team2Players } = this.state;
     return (
       <div>
         <Message info>
@@ -147,7 +178,7 @@ class MMRCalculator extends React.Component {
             Queuing up with the least difference of MMRs will increase our chances of getting matched up against each other.
           </p>
         </Message>
-        <br/>
+        <br />
         <div id='mmr-container'>
           <Table id='mmr-table'>
             <Table.Header>
@@ -157,7 +188,7 @@ class MMRCalculator extends React.Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {data.map((player, index) => (
+              {team1Players.map((player) => (
                 <Table.Row key={player.id}>
                   <Table.Cell className='ign-col' style={{ width: '8%' }}>
                     <Header as='h3' image>
@@ -168,7 +199,7 @@ class MMRCalculator extends React.Component {
                       </Header.Content>
                     </Header>
                   </Table.Cell>
-                  <Table.Cell>{this.displayRank(player.current_mmr)}</Table.Cell>
+                  <Table.Cell>{player.current_mmr}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
@@ -181,7 +212,7 @@ class MMRCalculator extends React.Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {data.map((player, index) => (
+              {team2Players.map((player) => (
                 <Table.Row key={player.id}>
                   <Table.Cell className='ign-col' style={{ width: '8%' }}>
                     <Header as='h3' image>
@@ -192,7 +223,7 @@ class MMRCalculator extends React.Component {
                       </Header.Content>
                     </Header>
                   </Table.Cell>
-                  <Table.Cell>{this.displayRank(player.current_mmr)}</Table.Cell>
+                  <Table.Cell>{player.current_mmr}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
