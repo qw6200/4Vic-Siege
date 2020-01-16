@@ -3,7 +3,7 @@ import { Table, Label, Icon, Header, Image, Statistic, Popup } from 'semantic-ui
 import './MainTable.css';
 import _ from 'lodash'
 
-let names = ['CubeheadCC', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'JjinSSu'];
+let names = ['Mochi.4Vic', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'JjinSSu'];
 
 class MainTable extends React.Component {
   constructor(props) {
