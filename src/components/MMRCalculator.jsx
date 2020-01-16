@@ -4,12 +4,11 @@ import { Message } from 'semantic-ui-react'
 import './MMRCalculator.css';
 import { thisExpression } from '@babel/types';
 
-let names = ['CubeheadCC', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'JjinSSu'];
+let names = ['Mochi.4Vic', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'JjinSSu'];
 
 class MMRCalculator extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       endpoints: [
         'https://api2.r6stats.com/public-api/stats/' + names[0] + '/pc/seasonal',
@@ -42,6 +41,9 @@ class MMRCalculator extends React.Component {
         .then(res => res.json())
         .then((data) => {
           let season = data.seasons.shifting_tides.regions.ncsa[0];
+          if (data.seasons.shifting_tides.regions.ncsa[0] === undefined) {
+            console.log('undefined');
+          }
           this.setState({
             data:
               [...this.state.data, {

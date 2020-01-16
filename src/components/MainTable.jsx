@@ -35,7 +35,6 @@ class MainTable extends React.Component {
       })
         .then(res => res.json())
         .then((data) => {
-          console.log(data);
           let season = data.seasons.shifting_tides.regions.ncsa[0];
           let lastSession = data.seasons.shifting_tides.regions.ncsa[1];
           if (season.mmr === 2500) {
@@ -190,14 +189,14 @@ class MainTable extends React.Component {
         )
       case 3:
         return (
-          <Label as='a' color='orange' image>
+          <Label as='a' color='yellow' image>
             <Icon name='low vision' size='large' />
             Very Average Player
         </Label>
         )
       case 4:
         return (
-          <Label as='a' color='yellow' image>
+          <Label as='a' color='orange' image>
             <Icon name='handicap' size='large' />
             Handicapped Player
         </Label>
