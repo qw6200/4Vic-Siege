@@ -26,7 +26,7 @@ class MainTable extends React.Component {
 
   getPlayerData() {
     const { endpoints } = this.state;
-    for (let i = 0; i <= endpoints.length; i++) {
+    for (let i = 0; i < endpoints.length; i++) {
       fetch(this.state.endpoints[i], {
         headers: new Headers({
           // eslint-disable-next-line no-useless-concat
@@ -81,7 +81,7 @@ class MainTable extends React.Component {
 
   sanitizeData() {
     const { data, endpoints } = this.state;
-    for (let i = 0; i <= endpoints.length; i++) {
+    for (let i = 0; i < endpoints.length; i++) {
       let ranked_kd = data[i].ranked_kd;
       let ranked_wp = data[i].ranked_wp;
       let current_mmr = data[i].current_mmr;
@@ -243,12 +243,17 @@ class MainTable extends React.Component {
   render() {
     const { data, column, direction } = this.state;
     return (
-      <Table celled sortable fixed basic='very' selectable>
+      <Table className='main' celled sortable fixed basic='very' selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>IGN</Table.HeaderCell>
+            <Table.HeaderCell style={{ width: '17%'}}>IGN</Table.HeaderCell>
             <Table.HeaderCell>Player</Table.HeaderCell>
-            <Table.HeaderCell>Ranked KD</Table.HeaderCell>
+            <Table.HeaderCell
+              sorted={column === 'ranked_kd' ? direction : null}
+              onClick={this.handleSort('ranked_kd')}
+            >
+              Ranked KD
+            </Table.HeaderCell>
             <Table.HeaderCell>Ranked W/L</Table.HeaderCell>
             <Table.HeaderCell>Games Played</Table.HeaderCell>
             <Table.HeaderCell
@@ -261,7 +266,7 @@ class MainTable extends React.Component {
               MMR Change
               <Popup
                 trigger={<Icon size='tiny' circular name='question' />}
-                content='This change is based on your MMR in the last 20-25 hours.'
+                content='This change is based on your MMR in the last 16-24 hours.'
                 size='small'
               />
             </Table.HeaderCell>

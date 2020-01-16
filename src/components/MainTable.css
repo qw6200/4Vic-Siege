@@ -10,9 +10,6 @@
   padding: 8px 0.785714em;
 }
 
-.ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child {
-  width: 17% !important; 
-}
 .ui.sortable.table thead th {
   font-size: 18px;
 }
@@ -30,6 +27,7 @@ i.large.icon, i.large.icons {
 
 .ui.label >.icon {
   margin: 0 0.35em 0 0;
+  margin-top: -3.7px;
 }
 
 .ui.celled.table tr:nth-child(even){

@@ -1,10 +1,10 @@
 /* eslint-disable array-callback-return */
 import React from 'react'
-import { Message } from 'semantic-ui-react'
+import { Message, Table, Header, Image } from 'semantic-ui-react'
 import './MMRCalculator.css';
 import { thisExpression } from '@babel/types';
 
-let names = ['Mochi.4Vic', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'JjinSSu'];
+let names = ['Mochi.4Vic', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
 
 class MMRCalculator extends React.Component {
   constructor(props) {
@@ -17,11 +17,13 @@ class MMRCalculator extends React.Component {
         'https://api2.r6stats.com/public-api/stats/' + names[3] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[4] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[5] + '/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
+        // 'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
       ],
       data: [],
       mmrList: [],
       indexComboList: [],
+      team1: [],
+      team2: [],
     }
   }
 
@@ -30,8 +32,8 @@ class MMRCalculator extends React.Component {
   }
 
   getPlayerData() {
-    const { data, endpoints, indexComboList, mmrList } = this.state;
-    for (let i = 0; i <= endpoints.length; i++) {
+    const { data, endpoints, mmrList } = this.state;
+    for (let i = 0; i < endpoints.length; i++) {
       fetch(this.state.endpoints[i], {
         headers: new Headers({
           // eslint-disable-next-line no-useless-concat
@@ -49,6 +51,8 @@ class MMRCalculator extends React.Component {
               [...this.state.data, {
                 name: data.username,
                 current_mmr: season.mmr,
+                rank_svg: season.rank_image,
+                current_rank: season.rank_text,
               }]
           });
           if (this.state.data.length >= endpoints.length) {
@@ -67,11 +71,11 @@ class MMRCalculator extends React.Component {
     if (k > set.length || k <= 0) {
       return [];
     }
-    
+
     if (k === set.length) {
       return [set];
     }
-    
+
     if (k === 1) {
       combs = [];
       for (i = 0; i < set.length; i++) {
@@ -94,45 +98,107 @@ class MMRCalculator extends React.Component {
     const add = (a, b) => a + b;
     let allCombos = this.k_combinations(mmrList, 3);
     let leastDiff = 10000;
-    for (let i = 0; i <= allCombos.length; i++) {
-      let tempList = mmrList;
+    let tempList = mmrList.slice(0);
+    let bestTeam1, bestTeam2;
+    for (let i = 0; i < allCombos.length; i++) {
       let comboGroup = allCombos[i];
-      for (let j = 0; j <= 3; j++) {
-
-      console.log('mmr:', this.state.mmrList);
+      for (let j = 0; j < 3; j++) {
         tempList.splice(tempList.indexOf(comboGroup[j]), 1);
-
-      console.log('mmr2:', this.state.mmrList);
       }
-      tempList = mmrList;
-      console.log('comboGroup:', comboGroup);
-      console.log('tempList:', tempList);
-      let team1Avg = comboGroup.reduce(add)/3;
-      let team2Avg = tempList.reduce(add)/3;
+      let team1Avg = comboGroup.reduce(add) / 3;
+      let team2Avg = tempList.reduce(add) / 3;
       let teamDiff = Math.abs(team1Avg - team2Avg);
-      console.log('team1Avg:', team1Avg);
-      console.log('team2Avg:', team2Avg);
       if (teamDiff < leastDiff) {
-        console.log('leastDiff:', leastDiff);
-        console.log('teamDiff:', teamDiff);
+        bestTeam1 = comboGroup.slice(0);
+        bestTeam2 = tempList.slice(0);
         leastDiff = teamDiff;
       }
+      this.setState({
+        team1: bestTeam1,
+        team2: bestTeam2
+      });
+      tempList = mmrList.slice(0);
+    }
+    this.matchTeams();
+  }
+  displayRank(column, round, percentage) {
+    if (percentage && column !== 'Unranked') {
+      return column.toFixed(round) + '%';
+    } else {
+      return column === 'Unranked' ? 'Unranked' : column.toFixed(round);
     }
   }
 
+  matchTeams() {
+    const { team1, team2 } = this.state;
+    console.log('Team 1:', team1);
+    console.log('Team 2:', team2);
+  }
+
   render() {
+    const { data } = this.state;
     return (
-      <Message info>
-      <Message.Header>3v3 Team Calculator</Message.Header>
-      <p>
-        This page is used to calculate the least difference of average MMRs between the six 4Vic players when in two groups of 3.
-        Why is this necessary you ask? Well, if we have six people playing, we can queue up as 3 and start a ranked match at the same time.
-        Queuing up with the least difference of MMRs will increase our chances of getting matched up against each other.
+      <div>
+        <Message info>
+          <Message.Header>3v3 Team Calculator</Message.Header>
+          <p>
+            This page is used to calculate the least difference of average MMRs between the six 4Vic players when in two groups of 3.
+            Why is this necessary you ask? Well, if we have six people playing, we can queue up as 3 and start a ranked match at the same time.
+            Queuing up with the least difference of MMRs will increase our chances of getting matched up against each other.
+          </p>
+        </Message>
         <br/>
-        Work in progress.
-      </p>
-    </Message>
-    
+        <div id='mmr-container'>
+          <Table id='mmr-table'>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell style={{ width: '8%' }} width={1}>IGN</Table.HeaderCell>
+                <Table.HeaderCell width={1}>MMR</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {data.map((player, index) => (
+                <Table.Row key={player.id}>
+                  <Table.Cell className='ign-col' style={{ width: '8%' }}>
+                    <Header as='h3' image>
+                      <Image src={player.rank_svg} rounded size='tiny' />
+                      <Header.Content>
+                        {player.name}
+                        <Header.Subheader>{player.current_rank}</Header.Subheader>
+                      </Header.Content>
+                    </Header>
+                  </Table.Cell>
+                  <Table.Cell>{this.displayRank(player.current_mmr)}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+          <Table id='mmr-table2'>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell style={{ width: '8%' }} width={1}>IGN</Table.HeaderCell>
+                <Table.HeaderCell width={1}>MMR</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {data.map((player, index) => (
+                <Table.Row key={player.id}>
+                  <Table.Cell className='ign-col' style={{ width: '8%' }}>
+                    <Header as='h3' image>
+                      <Image src={player.rank_svg} rounded size='tiny' />
+                      <Header.Content>
+                        {player.name}
+                        <Header.Subheader>{player.current_rank}</Header.Subheader>
+                      </Header.Content>
+                    </Header>
+                  </Table.Cell>
+                  <Table.Cell>{this.displayRank(player.current_mmr)}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
+      </div>
     );
   }
 }
