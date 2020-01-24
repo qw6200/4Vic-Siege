@@ -16,7 +16,7 @@ class MainTable extends React.Component {
         'https://api2.r6stats.com/public-api/stats/' + names[3] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[4] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[5] + '/pc/seasonal',
-        'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
+        // 'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
       ],
       data: [],
       column: null,

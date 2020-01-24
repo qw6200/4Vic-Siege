@@ -4,6 +4,7 @@ import React from 'react'
 import { Message, Table, Header, Image } from 'semantic-ui-react'
 import './MMRCalculator.css';
 import { thisExpression } from '@babel/types';
+import { mustBeValid } from 'json-schema';
 
 let names = ['Mochi.4Vic', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
 
@@ -27,6 +28,8 @@ class MMRCalculator extends React.Component {
       team2: [],
       team1Players: [],
       team2Players: [],
+      team1Avg: null,
+      team2Avg: null,
     }
   }
 
@@ -115,7 +118,9 @@ class MMRCalculator extends React.Component {
       }
       this.setState({
         team1: bestTeam1,
-        team2: bestTeam2
+        team2: bestTeam2,
+        team1Avg: team1Avg,
+        team2Avg: team2Avg,
       });
       tempList = mmrList.slice(0);
     }
@@ -167,7 +172,7 @@ class MMRCalculator extends React.Component {
   }
 
   render() {
-    const { data, team1Players, team2Players } = this.state;
+    const { data, team1Players, team2Players, team1Avg, team2Avg } = this.state;
     return (
       <div>
         <Message info>
@@ -200,6 +205,7 @@ class MMRCalculator extends React.Component {
                     </Header>
                   </Table.Cell>
                   <Table.Cell>{player.current_mmr}</Table.Cell>
+                  <Table.Cell>{team1Avg}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
@@ -224,6 +230,7 @@ class MMRCalculator extends React.Component {
                     </Header>
                   </Table.Cell>
                   <Table.Cell>{player.current_mmr}</Table.Cell>
+                  <Table.Cell>{team2Avg}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
