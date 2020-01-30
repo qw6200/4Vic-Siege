@@ -3,7 +3,7 @@ import { Table, Label, Icon, Header, Image, Statistic, Popup } from 'semantic-ui
 import './MainTable.css';
 import _ from 'lodash'
 
-let names = ['Mochi.4Vic', 'SnoopyBoy.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'JjinSSu'];
+let names = ['Mochi.4Vic', 'SnoopyBoy.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
 
 class MainTable extends React.Component {
   constructor(props) {
@@ -16,7 +16,6 @@ class MainTable extends React.Component {
         'https://api2.r6stats.com/public-api/stats/' + names[3] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[4] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[5] + '/pc/seasonal',
-        // 'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
       ],
       data: [],
       column: null,
@@ -37,7 +36,7 @@ class MainTable extends React.Component {
         .then((data) => {
           let season = data.seasons.shifting_tides.regions.ncsa[0];
           let lastSession = data.seasons.shifting_tides.regions.ncsa[1];
-          if (season.mmr === 2500) {
+          if (season.mmr === 2500 || data.seasons.shifting_tides.regions.ncsa.length < 2) {
             this.setState({
               data:
                 [...this.state.data, {
@@ -46,9 +45,10 @@ class MainTable extends React.Component {
                   ranked_kd: (season.kills) / (season.deaths),
                   ranked_wp: (season.wins / (season.wins + season.losses)) * 100,
                   games_played: (season.wins + season.losses),
-                  current_mmr: 0,
+                  current_mmr: season.mmr,
                   current_rank: season.rank_text,
                   rank_svg: season.rank_image,
+                  last_mmr: 0,
                 }]
             });
           } else {
@@ -121,6 +121,7 @@ class MainTable extends React.Component {
   }
 
   displayRank(column, round, percentage) {
+    console.log('colun:', column);
     if (percentage && column !== 'Unranked') {
       return column.toFixed(round) + '%';
     } else {
