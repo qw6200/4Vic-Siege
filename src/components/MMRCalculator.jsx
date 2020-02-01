@@ -6,7 +6,7 @@ import './MMRCalculator.css';
 import { thisExpression } from '@babel/types';
 import { mustBeValid } from 'json-schema';
 
-let names = ['Mochi.4Vic', 'Circadia.4Vic', 'ALSJAE', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
+let names = ['Mochi.4Vic', 'Circadia.4Vic', 'OT.4Vic', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
 
 class MMRCalculator extends React.Component {
   constructor(props) {
