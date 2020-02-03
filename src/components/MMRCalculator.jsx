@@ -1,7 +1,7 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable array-callback-return */
 import React from 'react'
-import { Message, Table, Header, Image, Statistic } from 'semantic-ui-react'
+import { Message, Table, Header, Image, Statistic, Dimmer, Loader, Segment } from 'semantic-ui-react'
 import './MMRCalculator.css';
 
 let names = ['Mochi.4Vic', 'SnoopyBoy.4Vic', 'OT.4Vic', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
@@ -27,6 +27,7 @@ class MMRCalculator extends React.Component {
       team2Players: [],
       team1Avg: null,
       team2Avg: null,
+      loaded: false,
     }
   }
 
@@ -167,11 +168,25 @@ class MMRCalculator extends React.Component {
         }
       });
     }
+    this.setState({ loaded: true })
+  }
+
+  showLoader() {
+    return (
+      <div>
+        <Segment style={{ 'height': '708px', 'width': '80%', 'margin': 'auto'}}>
+          <Dimmer style={{ 'height': '708px', 'width': '80%', 'margin': 'auto'}} active inverted>
+            <Loader inverted style={{'margin-left': '10%'}} size='large'>Calculating...</Loader>
+          </Dimmer>
+        </Segment>
+      </div>
+    );
   }
 
   render() {
-    const { data, team1Players, team2Players, team1Avg, team2Avg } = this.state;
+    const { loaded, data, team1Players, team2Players, team1Avg, team2Avg } = this.state;
     return (
+      !loaded ? this.showLoader() :
       <div>
         <Message info>
           <Message.Header>3v3 Team Calculator</Message.Header>

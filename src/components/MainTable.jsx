@@ -35,6 +35,7 @@ class MainTable extends React.Component {
       })
         .then(res => res.json())
         .then((data) => {
+          console.log(data);
           let season = data.seasons.shifting_tides.regions.ncsa[0];
           let lastSession = data.seasons.shifting_tides.regions.ncsa[1];
           if (season.mmr === 2500 || data.seasons.shifting_tides.regions.ncsa.length < 2) {
@@ -249,12 +250,10 @@ class MainTable extends React.Component {
   showLoader() {
     return (
       <div>
-        <Segment>
-          <Dimmer active inverted>
-            <Loader inverted size='large'>Loading</Loader>
+        <Segment style={{ 'height': '600px', 'width': '80%', 'margin': 'auto'}}>
+          <Dimmer style={{ 'height': '600px', 'width': '80%', 'margin': 'auto'}} active inverted>
+            <Loader inverted style={{'margin-left': '10%'}} size='large'>Loading</Loader>
           </Dimmer>
-
-          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
         </Segment>
       </div>
     );
