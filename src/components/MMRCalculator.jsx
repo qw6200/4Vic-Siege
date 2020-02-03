@@ -1,12 +1,10 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable array-callback-return */
 import React from 'react'
-import { Message, Table, Header, Image } from 'semantic-ui-react'
+import { Message, Table, Header, Image, Statistic } from 'semantic-ui-react'
 import './MMRCalculator.css';
-import { thisExpression } from '@babel/types';
-import { mustBeValid } from 'json-schema';
 
-let names = ['Mochi.4Vic', 'Circadia.4Vic', 'OT.4Vic', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
+let names = ['Mochi.4Vic', 'SnoopyBoy.4Vic', 'OT.4Vic', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
 
 class MMRCalculator extends React.Component {
   constructor(props) {
@@ -19,7 +17,6 @@ class MMRCalculator extends React.Component {
         'https://api2.r6stats.com/public-api/stats/' + names[3] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[4] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[5] + '/pc/seasonal',
-        // 'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
       ],
       data: [],
       mmrList: [],
@@ -108,20 +105,23 @@ class MMRCalculator extends React.Component {
       for (let j = 0; j < 3; j++) {
         tempList.splice(tempList.indexOf(comboGroup[j]), 1);
       }
-      let team1Avg = comboGroup.reduce(add) / 3;
-      let team2Avg = tempList.reduce(add) / 3;
-      let teamDiff = Math.abs(team1Avg - team2Avg);
+      let _team1Avg = comboGroup.reduce(add) / 3;
+      console.log('team1Avg:', _team1Avg)
+      let _team2Avg = tempList.reduce(add) / 3;
+      let teamDiff = Math.abs(_team1Avg - _team2Avg);
       if (teamDiff < leastDiff) {
         bestTeam1 = comboGroup.slice(0);
         bestTeam2 = tempList.slice(0);
+        _team1Avg = comboGroup.reduce(add) / 3;
+        _team2Avg = tempList.reduce(add) / 3;
         leastDiff = teamDiff;
+        this.setState({
+          team1: bestTeam1,
+          team2: bestTeam2,
+          team1Avg: _team1Avg,
+          team2Avg: _team2Avg,
+        })
       }
-      this.setState({
-        team1: bestTeam1,
-        team2: bestTeam2,
-        team1Avg: team1Avg,
-        team2Avg: team2Avg,
-      });
       tempList = mmrList.slice(0);
     }
     this.matchTeams();
@@ -136,8 +136,6 @@ class MMRCalculator extends React.Component {
 
   matchTeams() {
     const { team1Players, team2Players, team1, team2, data } = this.state;
-    let flag = 0;
-    let flag2 = 0;
     for (let i = 0; i < team1.length; i++) {
       data.map((player) => {
         if (team1[i] === player.current_mmr) {
@@ -205,10 +203,13 @@ class MMRCalculator extends React.Component {
                     </Header>
                   </Table.Cell>
                   <Table.Cell>{player.current_mmr}</Table.Cell>
-                  <Table.Cell>{team1Avg}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
+            <Statistic style={{ 'float': 'right', 'marginBottom': '25px' }}>
+              <Statistic.Value style={{ 'fontSize': '25px', 'color': '#3c44de' }}>{team1Avg !== null && team1Avg.toFixed(0)}</Statistic.Value>
+              <Statistic.Label style= {{ 'fontSize': '15px' }}>Average MMR</Statistic.Label>
+            </Statistic>
           </Table>
           <Table id='mmr-table2'>
             <Table.Header>
@@ -230,10 +231,13 @@ class MMRCalculator extends React.Component {
                     </Header>
                   </Table.Cell>
                   <Table.Cell>{player.current_mmr}</Table.Cell>
-                  <Table.Cell>{team2Avg}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
+            <Statistic style={{ 'float': 'right', 'marginBottom': '25px' }}>
+              <Statistic.Value style={{ 'fontSize': '25px', 'color': '#3c44de' }}>{team2Avg !== null && team2Avg.toFixed(0)}</Statistic.Value>
+              <Statistic.Label style= {{ 'fontSize': '15px' }}>Average MMR</Statistic.Label>
+            </Statistic>
           </Table>
         </div>
       </div>

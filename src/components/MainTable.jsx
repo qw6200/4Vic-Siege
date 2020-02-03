@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Label, Icon, Header, Image, Statistic, Popup } from 'semantic-ui-react'
+import { Table, Label, Icon, Header, Image, Statistic, Popup, Dimmer, Loader, Segment } from 'semantic-ui-react'
 import './MainTable.css';
 import _ from 'lodash'
 
@@ -20,6 +20,7 @@ class MainTable extends React.Component {
       data: [],
       column: null,
       direction: 'descending',
+      loaded: false,
     }
   }
 
@@ -117,11 +118,14 @@ class MainTable extends React.Component {
     const { data } = this.state;
     this.setState({
       data: data.reverse()
-    });
+    },
+      this.setState({
+        loaded: true
+      })
+    );
   }
 
   displayRank(column, round, percentage) {
-    console.log('colun:', column);
     if (percentage && column !== 'Unranked') {
       return column.toFixed(round) + '%';
     } else {
@@ -241,13 +245,28 @@ class MainTable extends React.Component {
         return 'Unknown Player';
     }
   }
-  render() {
-    const { data, column, direction } = this.state;
+
+  showLoader() {
     return (
-      <Table className='main' celled sortable fixed basic='very' selectable>
+      <div>
+        <Segment>
+          <Dimmer active inverted>
+            <Loader inverted size='large'>Loading</Loader>
+          </Dimmer>
+
+          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+        </Segment>
+      </div>
+    );
+  }
+
+  render() {
+    const { data, column, direction, loaded } = this.state;
+    return (
+      !loaded ? this.showLoader() : <Table className='main' celled sortable fixed basic='very' selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell style={{ width: '17%'}}>IGN</Table.HeaderCell>
+            <Table.HeaderCell style={{ width: '17%' }}>IGN</Table.HeaderCell>
             <Table.HeaderCell>Player</Table.HeaderCell>
             <Table.HeaderCell
               sorted={column === 'ranked_kd' ? direction : null}
