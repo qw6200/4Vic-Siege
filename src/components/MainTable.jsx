@@ -190,28 +190,28 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='green' image>
             <Icon name='star' size='large' />
-            Respectable Soldier
+            Fuck you Paul you TKing bitch
         </Label>
         )
       case 3:
         return (
           <Label as='a' color='yellow' image>
             <Icon name='low vision' size='large' />
-            Very Average Player
+            CeeCee ur a fag
         </Label>
         )
       case 4:
         return (
           <Label as='a' color='orange' image>
             <Icon name='handicap' size='large' />
-            Handicapped Player
+            Shane why are you down there u fucker
         </Label>
         )
       case 5:
         return (
           <Label as='a' color='brown' image>
             <Icon name='trash alternate' size='large' />
-            Straight Up Trash
+            No need to talk about this one
         </Label>
         )
       case 6:
