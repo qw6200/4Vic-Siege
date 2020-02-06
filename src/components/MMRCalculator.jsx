@@ -107,7 +107,6 @@ class MMRCalculator extends React.Component {
         tempList.splice(tempList.indexOf(comboGroup[j]), 1);
       }
       let _team1Avg = comboGroup.reduce(add) / 3;
-      console.log('team1Avg:', _team1Avg)
       let _team2Avg = tempList.reduce(add) / 3;
       let teamDiff = Math.abs(_team1Avg - _team2Avg);
       if (teamDiff < leastDiff) {

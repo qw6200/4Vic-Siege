@@ -176,14 +176,14 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='blue' image>
             <Icon name='chess king' size='large' />
-            King of the North
+            Fake Ass Hoe Cunt
         </Label>
         )
       case 1:
         return (
           <Label as='a' color='teal' image>
             <Icon name='trophy' size='large' />
-            Wannabe First
+            God of All Men
         </Label>
         )
       case 2:
