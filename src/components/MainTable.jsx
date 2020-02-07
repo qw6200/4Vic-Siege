@@ -190,28 +190,28 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='green' image>
             <Icon name='star' size='large' />
-            Major General
+            Brigadier General
         </Label>
         )
       case 3:
         return (
           <Label as='a' color='yellow' image>
             <Icon name='low vision' size='large' />
-            Lieutenant
+            1st Lieutenant
         </Label>
         )
       case 4:
         return (
           <Label as='a' color='orange' image>
             <Icon name='handicap' size='large' />
-            Private
+            Staff Sergeant
         </Label>
         )
       case 5:
         return (
           <Label as='a' color='brown' image>
             <Icon name='trash alternate' size='large' />
-            Trainee
+            Private First Class
         </Label>
         )
       case 6:
