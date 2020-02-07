@@ -176,49 +176,49 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='blue' image>
             <Icon name='chess king' size='large' />
-            Fake Ass Hoe Cunt
+            Supreme Leader
         </Label>
         )
       case 1:
         return (
           <Label as='a' color='teal' image>
             <Icon name='trophy' size='large' />
-            God of All Men
+            General of the Army
         </Label>
         )
       case 2:
         return (
           <Label as='a' color='green' image>
             <Icon name='star' size='large' />
-            Fuck you Paul you TKing bitch
+            Major General
         </Label>
         )
       case 3:
         return (
           <Label as='a' color='yellow' image>
             <Icon name='low vision' size='large' />
-            CeeCee ur a fag
+            Lieutenant
         </Label>
         )
       case 4:
         return (
           <Label as='a' color='orange' image>
             <Icon name='handicap' size='large' />
-            Shane why are you down there u fucker
+            Private
         </Label>
         )
       case 5:
         return (
           <Label as='a' color='brown' image>
             <Icon name='trash alternate' size='large' />
-            No need to talk about this one
+            Trainee
         </Label>
         )
       case 6:
         return (
           <Label as='a' color='red' image>
             <Icon name='blind' size='large' />
-            Jot-Bap Sekki
+           Fuck
           </Label>
         )
       default:
