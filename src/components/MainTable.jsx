@@ -48,9 +48,11 @@ class MainTable extends React.Component {
                   ranked_wp: (season.wins / (season.wins + season.losses)) * 100,
                   games_played: (season.wins + season.losses),
                   current_mmr: season.mmr,
+                  next_rank: season.next_rank_mmr - season.mmr,
                   current_rank: season.rank_text,
                   rank_svg: season.rank_image,
                   last_mmr: 0,
+                  last_kd: 0,
                 }]
             });
           } else {
@@ -63,9 +65,11 @@ class MainTable extends React.Component {
                   ranked_wp: (season.wins / (season.wins + season.losses)) * 100,
                   games_played: (season.wins + season.losses),
                   current_mmr: season.mmr,
+                  next_rank: season.next_rank_mmr - season.mmr,
                   current_rank: season.rank_text,
                   rank_svg: season.rank_image,
                   last_mmr: lastSession.mmr,
+                  last_kd: lastSession.kills / lastSession.deaths
                 }]
             });
           }
@@ -151,11 +155,14 @@ class MainTable extends React.Component {
     })
   }
 
-  mmrDifference(current_mmr, last_mmr) {
-    if (isNaN(current_mmr)) {
+  lastSessionDiff(current_stat, last_stat, kd) {
+    if (isNaN(current_stat)) {
       return 'Unranked';
     }
-    let diff = current_mmr - last_mmr;
+    let diff = current_stat - last_stat;
+    if (kd) {
+      diff = diff.toFixed(3);
+    }
     if (diff < 0) {
       return (
         <Statistic color='red'>
@@ -281,11 +288,20 @@ class MainTable extends React.Component {
             >
               Current MMR
             </Table.HeaderCell>
+            <Table.HeaderCell>MMR For Promo</Table.HeaderCell>
             <Table.HeaderCell>
               MMR Change
               <Popup
                 trigger={<Icon size='tiny' circular name='question' />}
                 content='This change is based on your MMR in the last 16-24 hours.'
+                size='small'
+              />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              K/D Change
+              <Popup
+                trigger={<Icon size='tiny' circular name='question' />}
+                content='This change is based on your KD in the last 16-24 hours.'
                 size='small'
               />
             </Table.HeaderCell>
@@ -315,7 +331,9 @@ class MainTable extends React.Component {
               </Table.Cell>
               <Table.Cell>{player.games_played}</Table.Cell>
               <Table.Cell>{this.displayRank(player.current_mmr)}</Table.Cell>
-              <Table.Cell>{this.mmrDifference(player.current_mmr, player.last_mmr)}</Table.Cell>
+              <Table.Cell>{player.next_rank}</Table.Cell>
+              <Table.Cell>{this.lastSessionDiff(player.current_mmr, player.last_mmr)}</Table.Cell>
+              <Table.Cell>{this.lastSessionDiff(player.ranked_kd, player.last_kd, true)}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
