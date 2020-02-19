@@ -56,6 +56,7 @@ class MainTable extends React.Component {
                 }]
             });
           } else {
+            console.log((season.kills - lastSession.kills) / (season.deaths - lastSession.deaths));
             this.setState({
               data:
                 [...this.state.data, {
@@ -69,7 +70,7 @@ class MainTable extends React.Component {
                   current_rank: season.rank_text,
                   rank_svg: season.rank_image,
                   last_mmr: lastSession.mmr,
-                  last_kd: lastSession.kills / lastSession.deaths
+                  last_kd: (season.kills - lastSession.kills) / (season.deaths - lastSession.deaths)
                 }]
             });
           }
@@ -159,11 +160,14 @@ class MainTable extends React.Component {
     if (isNaN(current_stat)) {
       return 'Unranked';
     }
+    if (isNaN(last_stat)) {
+      return 'None';
+    }
     let diff = current_stat - last_stat;
     if (kd) {
-      diff = diff.toFixed(3);
+      diff = last_stat.toFixed(3);
     }
-    if (diff < 0) {
+    if (diff < current_stat) {
       return (
         <Statistic color='red'>
           <Statistic.Value>{diff}</Statistic.Value>
@@ -298,7 +302,7 @@ class MainTable extends React.Component {
               />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              K/D Change
+              Last Session KD
               <Popup
                 trigger={<Icon size='tiny' circular name='question' />}
                 content='This change is based on your KD in the last 16-24 hours.'
