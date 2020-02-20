@@ -3,7 +3,7 @@ import { Table, Label, Icon, Header, Image, Statistic, Popup, Dimmer, Loader, Se
 import './MainTable.css';
 import _ from 'lodash'
 
-let names = ['Mochi.4Vic', 'SnoopyBoy.4Vic', 'OT.4Vic', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic'];
+let names = ['Mochi.4Vic', 'SnoopyBoy.4Vic', 'OT.4Vic', 'CeeCee.4Vic', 'SO.4Vic', 'TrendSetto.4Vic', 'Circadia.4Vic'];
 
 class MainTable extends React.Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class MainTable extends React.Component {
         'https://api2.r6stats.com/public-api/stats/' + names[3] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[4] + '/pc/seasonal',
         'https://api2.r6stats.com/public-api/stats/' + names[5] + '/pc/seasonal',
+        'https://api2.r6stats.com/public-api/stats/' + names[6] + '/pc/seasonal',
       ],
       data: [],
       column: null,
@@ -229,7 +230,7 @@ class MainTable extends React.Component {
         return (
           <Label as='a' color='red' image>
             <Icon name='blind' size='large' />
-           Fuck
+           Very low Smurf
           </Label>
         )
       default:
@@ -252,7 +253,7 @@ class MainTable extends React.Component {
       case names[5]:
         return 'Paul Han';
       case names[6]:
-        return 'Jinsu Yu ';
+        return 'Smurf';
       default:
         return 'Unknown Player';
     }
@@ -276,7 +277,7 @@ class MainTable extends React.Component {
       !loaded ? this.showLoader() : <Table className='main' celled sortable fixed basic='very' selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell style={{ width: '17%' }}>IGN</Table.HeaderCell>
+            <Table.HeaderCell style={{ width: '15%' }}>IGN</Table.HeaderCell>
             <Table.HeaderCell>Player</Table.HeaderCell>
             <Table.HeaderCell
               sorted={column === 'ranked_kd' ? direction : null}
